@@ -1,36 +1,7 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Smooth Commerce Submission
 
-## Getting Started
+The core architecture is a Material UI interface, with Redux as our global store to hold the Inventory items, Formik to handle the Create Inventory form states and Yup for validation. The Redux state provides an action to set the initial inventory list, and an insert for new items. The initial state is fetched from the JSONPlaceholder API, and mapped to a defined InventoryItem interface. I built a generic layout to mimic a multi-page NextJS application, but the actual work is in the Inventory page. The InventoryTable contains the filtering, sorting, and paging logic (in that logical order) - with each stage memoized such that it only recalculates the displayed results if one of the dependencies change (a key performance optimization). I added a debouncer to the searchField so we avoid potential performance issues with spam-rerenders while a user is trying to type. The CreateInventoryDialog features a Formik wrapped form which handles the form state and validation. Yup is used to define the validation schema used by Formik. General optimizations include memoizing the InventoryTable, CreateInventoryDialog and Sidebar components to avoid rerendering those reasonably heavy components redundantly. A useCallback hook was used for the CreateInventoryDialog close action to avoid forcing a rerender for a handler that has no dependencies.
 
-First, run the development server:
+I took a couple of liberties for polish (e.g adding a theme toggle) but the majority of implementation leverages default Material-UI components without much manual customization since a clean component structure should rely on themeing the whole component library rather than individual styles.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Thanks for reviewing this!
