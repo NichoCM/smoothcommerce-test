@@ -56,6 +56,7 @@ export default memo(function CreateInventoryDialog({
     },
   })
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (open) {
       formik.resetForm()

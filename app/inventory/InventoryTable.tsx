@@ -104,7 +104,7 @@ export default memo(function InventoryTable({
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedItems.map((item, index) => (
+            {paginatedItems.map((item) => (
               <TableRow key={item.id}>
                 <TableCell>{item.id.toString()}</TableCell>
                 <TableCell>{item.displayName}</TableCell>
