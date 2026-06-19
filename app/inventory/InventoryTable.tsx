@@ -130,7 +130,7 @@ export default function InventoryTable({ searchFilter }: InventoryTableProps) {
       </TableContainer>
       <TablePagination
         component="div"
-        count={items.length}
+        count={filteredItems.length}
         page={page}
         onPageChange={(_, newPage) => setPage(newPage)}
         rowsPerPage={rowsPerPage}
@@ -138,7 +138,7 @@ export default function InventoryTable({ searchFilter }: InventoryTableProps) {
           setRowsPerPage(parseInt(e.target.value, 10))
           setPage(0)
         }}
-        rowsPerPageOptions={[5, 10, 25]}
+        rowsPerPageOptions={[5, 10]}
       />
     </>
   )
