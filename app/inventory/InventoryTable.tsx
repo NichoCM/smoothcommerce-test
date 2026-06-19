@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useMemo, useState } from "react"
+import { memo, useCallback, useMemo, useState } from "react"
 import { useSelector } from "react-redux"
 import type { RootState } from "../store/store"
 import type { InventoryItem } from "../types"
@@ -19,7 +19,7 @@ interface InventoryTableProps {
   searchFilter: string
 }
 
-export default function InventoryTable({ searchFilter }: InventoryTableProps) {
+export default memo(function InventoryTable({ searchFilter }: InventoryTableProps) {
   const items = useSelector((state: RootState) => state.inventory.items)
 
   // Pagination state
@@ -142,4 +142,4 @@ export default function InventoryTable({ searchFilter }: InventoryTableProps) {
       />
     </>
   )
-}
+})

@@ -1,5 +1,6 @@
 "use client"
 
+import { memo } from "react"
 import Drawer from "@mui/material/Drawer"
 import List from "@mui/material/List"
 import ListItem from "@mui/material/ListItem"
@@ -23,7 +24,7 @@ const NAV_ITEMS = [
   { label: "Settings", href: "/settings" },
 ]
 
-export default function Sidebar() {
+export default memo(function Sidebar() {
   const dispatch = useDispatch<AppDispatch>()
   const mode = useSelector((state: RootState) => state.theme.mode)
 
@@ -63,4 +64,4 @@ export default function Sidebar() {
       </List>
     </Drawer>
   )
-}
+})

@@ -10,7 +10,7 @@ import {
   TextField,
 } from "@mui/material"
 import { useFormik } from "formik"
-import { useEffect } from "react"
+import { memo, useEffect } from "react"
 import { useDispatch } from "react-redux"
 import * as yup from "yup"
 import { addItem } from "../store/inventorySlice"
@@ -32,7 +32,7 @@ export interface CreateInventoryDialogProps {
 }
 
 // Dialog to add items to the inventory store
-export default function CreateInventoryDialog({
+export default memo(function CreateInventoryDialog({
   open,
   onClose,
 }: CreateInventoryDialogProps) {
@@ -41,7 +41,7 @@ export default function CreateInventoryDialog({
   const formik = useFormik({
     initialValues: {
       displayName: "",
-      quantity: undefined,
+      quantity: null,
     },
     validateOnChange: false,
     validationSchema: inventoryItemSchema,
@@ -106,4 +106,4 @@ export default function CreateInventoryDialog({
       </form>
     </Dialog>
   )
-}
+})

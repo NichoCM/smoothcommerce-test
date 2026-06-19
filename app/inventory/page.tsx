@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useDispatch } from "react-redux"
 import type { AppDispatch } from "../store/store"
 import { setItems } from "../store/inventorySlice"
@@ -21,6 +21,7 @@ export default function InventoryPage() {
   const [showCreate, setShowCreate] = useState(false)
   const [searchFilter, setSearchFilter] = useState("")
   const [debouncedFilter, setDebouncedFilter] = useState("")
+  const handleCloseCreate = useCallback(() => setShowCreate(false), [])
 
   // Debounce the search filter to avoid filtering on every keystroke
   useEffect(() => {
@@ -79,7 +80,7 @@ export default function InventoryPage() {
       <InventoryTable searchFilter={debouncedFilter} />
       <CreateInventoryDialog
         open={showCreate}
-        onClose={() => setShowCreate(false)}
+        onClose={handleCloseCreate}
       />
     </Stack>
   )
