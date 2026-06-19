@@ -6,11 +6,18 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Stack,
   TextField,
 } from "@mui/material"
 import { useFormik } from "formik"
 import { useDispatch } from "react-redux"
+import * as yup from "yup"
 import { addItem } from "../store/inventorySlice"
+
+const inventoryItemSchema = yup.object({
+  displayName: yup.string().min(3, "Display name must be at least 3 characters").required(),
+  quantity: yup.number().moreThan(0, "Quantity must be greater than 0").required(),
+})
 
 export interface CreateInventoryDialogProps {
   open: boolean
@@ -29,6 +36,8 @@ export default function CreateInventoryDialog({
       displayName: "",
       quantity: 0,
     },
+    validateOnChange: false,
+    validationSchema: inventoryItemSchema,
     onSubmit: (values, { resetForm }) => {
       dispatch(addItem({ displayName: values.displayName, quantity: values.quantity }))
       resetForm()
@@ -41,8 +50,8 @@ export default function CreateInventoryDialog({
       <form onSubmit={formik.handleSubmit}>
         <DialogTitle>Add Inventory Item</DialogTitle>
         <DialogContent>
-          <TextField
-            autoFocus
+        <Stack spacing={2}>
+        <TextField
             margin="dense"
             id="displayName"
             name="displayName"
@@ -50,8 +59,10 @@ export default function CreateInventoryDialog({
             fullWidth
             value={formik.values.displayName}
             onChange={formik.handleChange}
-          />
-          <TextField
+            onBlur={formik.handleBlur}
+            error={formik.touched.displayName && Boolean(formik.errors.displayName)}
+        />
+        <TextField
             margin="dense"
             id="quantity"
             name="quantity"
@@ -60,11 +71,18 @@ export default function CreateInventoryDialog({
             fullWidth
             value={formik.values.quantity}
             onChange={formik.handleChange}
-          />
+            onBlur={formik.handleBlur}
+            error={formik.touched.quantity && Boolean(formik.errors.quantity)}
+        />
+        </Stack>
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose}>Cancel</Button>
-          <Button type="submit" variant="contained">
+          <Button
+            type="submit"
+            variant="contained"
+            disabled={!formik.dirty || !formik.isValid}
+          >
             Add
           </Button>
         </DialogActions>
