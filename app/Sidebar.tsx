@@ -6,7 +6,14 @@ import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemText from '@mui/material/ListItemText'
 import Toolbar from '@mui/material/Toolbar'
+import IconButton from '@mui/material/IconButton'
+import Brightness4Icon from '@mui/icons-material/Brightness4'
+import Brightness7Icon from '@mui/icons-material/Brightness7'
 import Link from 'next/link'
+import { useDispatch, useSelector } from 'react-redux'
+import type { RootState, AppDispatch } from './store/store'
+import { toggleMode } from './store/themeSlice'
+import { ListItemSecondaryAction } from '@mui/material'
 
 const DRAWER_WIDTH = 240
 
@@ -17,6 +24,9 @@ const NAV_ITEMS = [
 ]
 
 export default function Sidebar() {
+  const dispatch = useDispatch<AppDispatch>()
+  const mode = useSelector((state: RootState) => state.theme.mode)
+
   return (
     <Drawer
       variant="permanent"
@@ -37,6 +47,15 @@ export default function Sidebar() {
             </ListItemButton>
           </ListItem>
         ))}
+        <ListItem secondaryAction={
+            <ListItemSecondaryAction>
+              <IconButton edge={'end'} onClick={() => dispatch(toggleMode())} sx={{ ml: 'auto' }}>
+                {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+              </IconButton>
+            </ListItemSecondaryAction>
+          }>
+          <ListItemText primary={'Theme'} />
+        </ListItem>
       </List>
     </Drawer>
   )
