@@ -37,7 +37,7 @@ export default memo(function Sidebar() {
         "& .MuiDrawer-paper": { width: DRAWER_WIDTH, boxSizing: "border-box" },
       }}
     >
-      <Toolbar>Temporary App Title</Toolbar>
+      <Toolbar>Smooth Commerce Submission</Toolbar>
       <List>
         {NAV_ITEMS.map((item) => (
           <ListItem key={item.href} disablePadding>

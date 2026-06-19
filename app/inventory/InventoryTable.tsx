@@ -19,7 +19,9 @@ interface InventoryTableProps {
   searchFilter: string
 }
 
-export default memo(function InventoryTable({ searchFilter }: InventoryTableProps) {
+export default memo(function InventoryTable({
+  searchFilter,
+}: InventoryTableProps) {
   const items = useSelector((state: RootState) => state.inventory.items)
 
   // Pagination state
@@ -86,7 +88,7 @@ export default memo(function InventoryTable({ searchFilter }: InventoryTableProp
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>ID</TableCell>
+              <TableCell sx={{ width: 80 }}>ID</TableCell>
               <TableCell>
                 <TableSortLabel
                   active={sortColumn === "displayName"}
@@ -98,7 +100,7 @@ export default memo(function InventoryTable({ searchFilter }: InventoryTableProp
                   Display Name
                 </TableSortLabel>
               </TableCell>
-              <TableCell>Quantity</TableCell>
+              <TableCell sx={{ width: 120 }}>Quantity</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

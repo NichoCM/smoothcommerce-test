@@ -45,10 +45,7 @@ export default function InventoryPage() {
         </Stack>
       </Stack>
       <InventoryTable searchFilter={debouncedFilter} />
-      <CreateInventoryDialog
-        open={showCreate}
-        onClose={handleCloseCreate}
-      />
+      <CreateInventoryDialog open={showCreate} onClose={handleCloseCreate} />
     </Stack>
   )
 }
