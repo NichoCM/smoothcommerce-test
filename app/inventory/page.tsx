@@ -1,22 +1,13 @@
 "use client"
 
 import { useCallback, useEffect, useState } from "react"
-import { useDispatch } from "react-redux"
-import type { AppDispatch } from "../store/store"
-import { setItems } from "../store/inventorySlice"
-import { InventoryItem, JsonPlaceholderTodo } from "../types"
 import InventoryTable from "./InventoryTable"
 import Typography from "@mui/material/Typography"
 import { Button, Stack, TextField } from "@mui/material"
 import AddIcon from "@mui/icons-material/Add"
 import CreateInventoryDialog from "./CreateInventoryDialog"
 
-const JSON_PLACEHOLDER_URL = "https://jsonplaceholder.typicode.com/todos"
-const TODO_FETCH_LIMIT = 30
-
 export default function InventoryPage() {
-  const dispatch = useDispatch<AppDispatch>()
-
   // Toggle showing or hiding the create dialog
   const [showCreate, setShowCreate] = useState(false)
   const [searchFilter, setSearchFilter] = useState("")
@@ -28,30 +19,6 @@ export default function InventoryPage() {
     const timer = setTimeout(() => setDebouncedFilter(searchFilter), 300)
     return () => clearTimeout(timer)
   }, [searchFilter])
-
-  useEffect(() => {
-    const controller = new AbortController()
-    fetch(JSON_PLACEHOLDER_URL, { signal: controller.signal })
-      .then((response) => response.json() as Promise<JsonPlaceholderTodo[]>)
-      .then(
-        (data) =>
-          data
-            .slice(0, TODO_FETCH_LIMIT)
-            .map((todo) => ({ displayName: todo.title, quantity: 0, id: todo.id })) as InventoryItem[],
-      )
-      .then((inventoryItems) => dispatch(setItems(inventoryItems)))
-      .catch((error) => {
-        if (error.name === "AbortError") {
-          console.log("Fetch aborted")
-        } else {
-          console.error("Error fetching inventory:", error)
-        }
-      })
-
-    return () => {
-      controller.abort()
-    }
-  }, [dispatch])
 
   return (
     <Stack spacing={2}>

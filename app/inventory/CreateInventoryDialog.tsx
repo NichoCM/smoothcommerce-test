@@ -43,7 +43,6 @@ export default memo(function CreateInventoryDialog({
       displayName: "",
       quantity: "",
     },
-    validateOnChange: false,
     validationSchema: inventoryItemSchema,
     onSubmit: (values, { resetForm }) => {
       dispatch(
