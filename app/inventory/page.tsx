@@ -28,7 +28,7 @@ export default function InventoryPage() {
         (data) =>
           data
             .slice(0, TODO_FETCH_LIMIT)
-            .map((todo) => ({ displayName: todo.title })) as InventoryItem[],
+            .map((todo) => ({ displayName: todo.title, quantity: 0, id: todo.id })) as InventoryItem[],
       )
       .then((inventoryItems) => dispatch(setItems(inventoryItems)))
       .catch((error) => {

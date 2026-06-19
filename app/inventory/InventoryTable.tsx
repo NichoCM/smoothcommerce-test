@@ -24,16 +24,23 @@ export default function InventoryTable() {
 
   // Sort state, default column to null
   const [sortColumn, setSortColumn] = useState<keyof InventoryItem | null>(null)
-  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc")
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc" | undefined>(undefined)
 
   const handleSort = useCallback((column: keyof InventoryItem) => {
     if (sortColumn === column) {
-      setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"))
+      if (sortDirection === "asc") {
+        setSortDirection("desc")
+      } else if (sortDirection === "desc") {
+        setSortColumn(null)
+        setSortDirection(undefined)
+      } else {
+        setSortDirection("asc")
+      }
     } else {
       setSortColumn(column)
       setSortDirection("asc")
     }
-  }, [sortColumn])
+  }, [sortColumn, sortDirection])
 
   // Sort the inventory items by the configuration
   const sortedItems = useMemo(() => {
@@ -53,6 +60,15 @@ export default function InventoryTable() {
         <Table>
           <TableHead>
             <TableRow>
+               <TableCell>
+                <TableSortLabel
+                  active={sortColumn === "id"}
+                  direction={sortColumn === "id" ? sortDirection : "asc"}
+                  onClick={() => handleSort("id")}
+                >
+                  ID
+                </TableSortLabel>
+              </TableCell>
               <TableCell>
                 <TableSortLabel
                   active={sortColumn === "displayName"}
@@ -62,12 +78,23 @@ export default function InventoryTable() {
                   Display Name
                 </TableSortLabel>
               </TableCell>
+               <TableCell>
+                <TableSortLabel
+                  active={sortColumn === "quantity"}
+                  direction={sortColumn === "quantity" ? sortDirection : "asc"}
+                  onClick={() => handleSort("quantity")}
+                >
+                  Quantity
+                </TableSortLabel>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {paginatedItems.map((item, index) => (
-              <TableRow key={index}>
+              <TableRow key={item.id}>
+                <TableCell>{item.id.toString()}</TableCell>
                 <TableCell>{item.displayName}</TableCell>
+                <TableCell>{item.quantity}</TableCell>
               </TableRow>
             ))}
           </TableBody>

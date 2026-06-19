@@ -27,9 +27,10 @@ export default function CreateInventoryDialog({
   const formik = useFormik({
     initialValues: {
       displayName: "",
+      quantity: 0,
     },
     onSubmit: (values, { resetForm }) => {
-      dispatch(addItem({ displayName: values.displayName }))
+      dispatch(addItem({ displayName: values.displayName, quantity: values.quantity }))
       resetForm()
       onClose()
     },
@@ -48,6 +49,16 @@ export default function CreateInventoryDialog({
             label="Display Name"
             fullWidth
             value={formik.values.displayName}
+            onChange={formik.handleChange}
+          />
+          <TextField
+            margin="dense"
+            id="quantity"
+            name="quantity"
+            label="Quantity"
+            type="number"
+            fullWidth
+            value={formik.values.quantity}
             onChange={formik.handleChange}
           />
         </DialogContent>

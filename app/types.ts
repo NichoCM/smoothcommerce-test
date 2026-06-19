@@ -10,4 +10,5 @@ export interface JsonPlaceholderTodo {
 export interface InventoryItem {
   id: number
   displayName: string
+  quantity: number
 }
