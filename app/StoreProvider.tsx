@@ -1,9 +1,9 @@
 "use client"
 
-import { useEffect } from "react"
-import { Provider, useDispatch, useSelector } from "react-redux"
+import { useEffect, useRef } from "react"
+import { Provider, useDispatch } from "react-redux"
 import { store } from "./store/store"
-import type { AppDispatch, RootState } from "./store/store"
+import type { AppDispatch } from "./store/store"
 import { setItems } from "./store/inventorySlice"
 import type { JsonPlaceholderTodo, InventoryItem } from "./types"
 
@@ -12,10 +12,11 @@ const TODO_FETCH_LIMIT = 30
 
 function InventoryLoader({ children }: { children: React.ReactNode }) {
   const dispatch = useDispatch<AppDispatch>()
-  const items = useSelector((state: RootState) => state.inventory.items)
+  const hasFetched = useRef(false)
 
   useEffect(() => {
-    if (items.length > 0) return
+    if (hasFetched.current) return
+    hasFetched.current = true
 
     const controller = new AbortController()
     fetch(JSON_PLACEHOLDER_URL, { signal: controller.signal })
@@ -29,7 +30,7 @@ function InventoryLoader({ children }: { children: React.ReactNode }) {
       .then((inventoryItems) => dispatch(setItems(inventoryItems)))
       .catch((error) => {
         if (error.name === "AbortError") {
-          console.log("Fetch aborted")
+          hasFetched.current = false
         } else {
           console.error("Error fetching inventory:", error)
         }
@@ -38,7 +39,7 @@ function InventoryLoader({ children }: { children: React.ReactNode }) {
     return () => {
       controller.abort()
     }
-  }, [dispatch, items.length])
+  }, [dispatch])
 
   return <>{children}</>
 }
