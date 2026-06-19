@@ -1,18 +1,24 @@
 'use client'
 
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useDispatch } from "react-redux"
 import type { AppDispatch } from "../store/store"
 import { setItems } from "../store/inventorySlice"
 import { InventoryItem, JsonPlaceholderTodo } from "../types"
-import InventoryTable from "../InventoryTable"
+import InventoryTable from "./InventoryTable"
 import Typography from "@mui/material/Typography"
+import { Button, Stack } from "@mui/material"
+import AddIcon from '@mui/icons-material/Add'
+import CreateInventoryDialog from "./CreateInventoryDialog"
 
 const JSON_PLACEHOLDER_URL = "https://jsonplaceholder.typicode.com/todos"
 const TODO_FETCH_LIMIT = 30
 
 export default function InventoryPage() {
   const dispatch = useDispatch<AppDispatch>()
+
+  // Toggle showing or hiding the create dialog
+  const [showCreate, setShowCreate] = useState(false)
 
   useEffect(() => {
     const controller = new AbortController()
@@ -34,9 +40,19 @@ export default function InventoryPage() {
   }, [dispatch])
 
   return (
-    <>
-      <Typography variant="h4" gutterBottom>Inventory</Typography>
+    <Stack spacing={2}>
+      <Stack useFlexGap direction={'row'} sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
+        <Typography variant="h6">Inventory</Typography>
+        <Button
+          onClick={() => setShowCreate(true)}
+          startIcon={<AddIcon />} variant="contained">
+          New Item
+        </Button>
+      </Stack>
       <InventoryTable />
-    </>
+      <CreateInventoryDialog
+        open={showCreate}
+        onClose={() => setShowCreate(false)} />
+    </Stack>
   )
 }

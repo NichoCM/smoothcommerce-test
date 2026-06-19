@@ -16,8 +16,11 @@ export const inventorySlice = createSlice({
     setItems(state, action: PayloadAction<InventoryItem[]>) {
       state.items = action.payload
     },
+    addItem(state, action: PayloadAction<InventoryItem>) {
+      state.items.push(action.payload)
+    },
   },
 })
 
-export const { setItems } = inventorySlice.actions
+export const { setItems, addItem } = inventorySlice.actions
 export default inventorySlice.reducer

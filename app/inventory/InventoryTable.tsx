@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
-import type { RootState } from './store/store'
+import type { RootState } from '../store/store'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
