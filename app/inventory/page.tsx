@@ -7,7 +7,7 @@ import { setItems } from "../store/inventorySlice"
 import { InventoryItem, JsonPlaceholderTodo } from "../types"
 import InventoryTable from "./InventoryTable"
 import Typography from "@mui/material/Typography"
-import { Button, Stack } from "@mui/material"
+import { Button, Stack, TextField } from "@mui/material"
 import AddIcon from "@mui/icons-material/Add"
 import CreateInventoryDialog from "./CreateInventoryDialog"
 
@@ -19,6 +19,14 @@ export default function InventoryPage() {
 
   // Toggle showing or hiding the create dialog
   const [showCreate, setShowCreate] = useState(false)
+  const [searchFilter, setSearchFilter] = useState("")
+  const [debouncedFilter, setDebouncedFilter] = useState("")
+
+  // Debounce the search filter to avoid filtering on every keystroke
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedFilter(searchFilter), 300)
+    return () => clearTimeout(timer)
+  }, [searchFilter])
 
   useEffect(() => {
     const controller = new AbortController()
@@ -52,15 +60,23 @@ export default function InventoryPage() {
         sx={{ justifyContent: "space-between", alignItems: "center" }}
       >
         <Typography variant="h6">Inventory</Typography>
-        <Button
-          onClick={() => setShowCreate(true)}
-          startIcon={<AddIcon />}
-          variant="contained"
-        >
-          New Item
-        </Button>
+        <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
+          <TextField
+            size="small"
+            placeholder="Search by display name"
+            value={searchFilter}
+            onChange={(e) => setSearchFilter(e.target.value)}
+          />
+          <Button
+            onClick={() => setShowCreate(true)}
+            startIcon={<AddIcon />}
+            variant="contained"
+          >
+            New Item
+          </Button>
+        </Stack>
       </Stack>
-      <InventoryTable />
+      <InventoryTable searchFilter={debouncedFilter} />
       <CreateInventoryDialog
         open={showCreate}
         onClose={() => setShowCreate(false)}

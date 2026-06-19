@@ -15,7 +15,11 @@ import Paper from "@mui/material/Paper"
 import { TableSortLabel } from "@mui/material"
 import { comparison } from "../utils"
 
-export default function InventoryTable() {
+interface InventoryTableProps {
+  searchFilter: string
+}
+
+export default function InventoryTable({ searchFilter }: InventoryTableProps) {
   const items = useSelector((state: RootState) => state.inventory.items)
 
   // Pagination state
@@ -24,34 +28,56 @@ export default function InventoryTable() {
 
   // Sort state, default column to null
   const [sortColumn, setSortColumn] = useState<keyof InventoryItem | null>(null)
-  const [sortDirection, setSortDirection] = useState<"asc" | "desc" | undefined>(undefined)
+  const [sortDirection, setSortDirection] = useState<
+    "asc" | "desc" | undefined
+  >(undefined)
 
-  const handleSort = useCallback((column: keyof InventoryItem) => {
-    if (sortColumn === column) {
-      if (sortDirection === "asc") {
-        setSortDirection("desc")
-      } else if (sortDirection === "desc") {
-        setSortColumn(null)
-        setSortDirection(undefined)
+  // Handle sorting when a column header is clicked - toggle between asc, desc, and no sort
+  const handleSort = useCallback(
+    (column: keyof InventoryItem) => {
+      if (sortColumn === column) {
+        if (sortDirection === "asc") {
+          setSortDirection("desc")
+        } else if (sortDirection === "desc") {
+          setSortColumn(null)
+          setSortDirection(undefined)
+        } else {
+          setSortDirection("asc")
+        }
       } else {
+        setSortColumn(column)
         setSortDirection("asc")
       }
-    } else {
-      setSortColumn(column)
-      setSortDirection("asc")
-    }
-  }, [sortColumn, sortDirection])
+    },
+    [sortColumn, sortDirection],
+  )
+
+  // Get filtered items (case-insensitive) on the display name
+  const filteredItems = useMemo(() => {
+    if (!searchFilter) return items
+    const lowerFilter = searchFilter.toLowerCase()
+    return items.filter((item) =>
+      item.displayName.toLowerCase().includes(lowerFilter),
+    )
+  }, [items, searchFilter])
 
   // Sort the inventory items by the configuration
   const sortedItems = useMemo(() => {
-    if (!sortColumn) return [...items]
-    return [...items].sort((a, b) => comparison(a[sortColumn], b[sortColumn]) * (sortDirection === 'asc' ? 1 : -1))
-  }, [items, sortDirection, sortColumn])
+    if (!sortColumn) return [...filteredItems]
+    return [...filteredItems].sort(
+      (a, b) =>
+        comparison(a[sortColumn], b[sortColumn]) *
+        (sortDirection === "asc" ? 1 : -1),
+    )
+  }, [filteredItems, sortDirection, sortColumn])
 
   // Memoize the paginated items **after sorting** to avoid based on the current items
   // page and rows to avoid unecessary rerenders
   const paginatedItems = useMemo(() => {
-    return sortedItems.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+    return sortedItems.slice(
+      page * rowsPerPage,
+      page * rowsPerPage + rowsPerPage,
+    )
   }, [sortedItems, page, rowsPerPage])
 
   return (
@@ -60,7 +86,7 @@ export default function InventoryTable() {
         <Table>
           <TableHead>
             <TableRow>
-               <TableCell>
+              <TableCell>
                 <TableSortLabel
                   active={sortColumn === "id"}
                   direction={sortColumn === "id" ? sortDirection : "asc"}
@@ -72,13 +98,15 @@ export default function InventoryTable() {
               <TableCell>
                 <TableSortLabel
                   active={sortColumn === "displayName"}
-                  direction={sortColumn === "displayName" ? sortDirection : "asc"}
+                  direction={
+                    sortColumn === "displayName" ? sortDirection : "asc"
+                  }
                   onClick={() => handleSort("displayName")}
                 >
                   Display Name
                 </TableSortLabel>
               </TableCell>
-               <TableCell>
+              <TableCell>
                 <TableSortLabel
                   active={sortColumn === "quantity"}
                   direction={sortColumn === "quantity" ? sortDirection : "asc"}
