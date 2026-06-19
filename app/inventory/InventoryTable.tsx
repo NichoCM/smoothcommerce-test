@@ -86,15 +86,7 @@ export default memo(function InventoryTable({ searchFilter }: InventoryTableProp
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>
-                <TableSortLabel
-                  active={sortColumn === "id"}
-                  direction={sortColumn === "id" ? sortDirection : "asc"}
-                  onClick={() => handleSort("id")}
-                >
-                  ID
-                </TableSortLabel>
-              </TableCell>
+              <TableCell>ID</TableCell>
               <TableCell>
                 <TableSortLabel
                   active={sortColumn === "displayName"}
@@ -106,15 +98,7 @@ export default memo(function InventoryTable({ searchFilter }: InventoryTableProp
                   Display Name
                 </TableSortLabel>
               </TableCell>
-              <TableCell>
-                <TableSortLabel
-                  active={sortColumn === "quantity"}
-                  direction={sortColumn === "quantity" ? sortDirection : "asc"}
-                  onClick={() => handleSort("quantity")}
-                >
-                  Quantity
-                </TableSortLabel>
-              </TableCell>
+              <TableCell>Quantity</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
