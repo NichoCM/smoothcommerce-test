@@ -18,7 +18,7 @@ import { addItem } from "../store/inventorySlice"
 const inventoryItemSchema = yup.object({
   displayName: yup
     .string()
-    .min(3, "Display name must be at least 3 characters")
+    .min(4, "Display name must be longer than 3 characters")
     .required(),
   quantity: yup
     .number()
@@ -41,13 +41,16 @@ export default memo(function CreateInventoryDialog({
   const formik = useFormik({
     initialValues: {
       displayName: "",
-      quantity: null,
+      quantity: "",
     },
     validateOnChange: false,
     validationSchema: inventoryItemSchema,
     onSubmit: (values, { resetForm }) => {
       dispatch(
-        addItem({ displayName: values.displayName, quantity: values.quantity }),
+        addItem({
+          displayName: values.displayName,
+          quantity: parseInt(values.quantity),
+        }),
       )
       resetForm()
       onClose()
@@ -78,6 +81,9 @@ export default memo(function CreateInventoryDialog({
               error={
                 formik.touched.displayName && Boolean(formik.errors.displayName)
               }
+              helperText={
+                formik.touched.displayName && formik.errors.displayName
+              }
             />
             <TextField
               margin="dense"
@@ -90,6 +96,7 @@ export default memo(function CreateInventoryDialog({
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               error={formik.touched.quantity && Boolean(formik.errors.quantity)}
+              helperText={formik.touched.quantity && formik.errors.quantity}
             />
           </Stack>
         </DialogContent>
