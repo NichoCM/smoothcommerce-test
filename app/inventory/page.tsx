@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import { useEffect, useState } from "react"
 import { useDispatch } from "react-redux"
@@ -8,7 +8,7 @@ import { InventoryItem, JsonPlaceholderTodo } from "../types"
 import InventoryTable from "./InventoryTable"
 import Typography from "@mui/material/Typography"
 import { Button, Stack } from "@mui/material"
-import AddIcon from '@mui/icons-material/Add'
+import AddIcon from "@mui/icons-material/Add"
 import CreateInventoryDialog from "./CreateInventoryDialog"
 
 const JSON_PLACEHOLDER_URL = "https://jsonplaceholder.typicode.com/todos"
@@ -24,11 +24,16 @@ export default function InventoryPage() {
     const controller = new AbortController()
     fetch(JSON_PLACEHOLDER_URL, { signal: controller.signal })
       .then((response) => response.json() as Promise<JsonPlaceholderTodo[]>)
-      .then(data => data.slice(0, TODO_FETCH_LIMIT).map(todo => ({ displayName: todo.title })) as InventoryItem[])
+      .then(
+        (data) =>
+          data
+            .slice(0, TODO_FETCH_LIMIT)
+            .map((todo) => ({ displayName: todo.title })) as InventoryItem[],
+      )
       .then((inventoryItems) => dispatch(setItems(inventoryItems)))
       .catch((error) => {
-        if (error.name === 'AbortError') {
-          console.log('Fetch aborted')
+        if (error.name === "AbortError") {
+          console.log("Fetch aborted")
         } else {
           console.error("Error fetching inventory:", error)
         }
@@ -41,18 +46,25 @@ export default function InventoryPage() {
 
   return (
     <Stack spacing={2}>
-      <Stack useFlexGap direction={'row'} sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
+      <Stack
+        useFlexGap
+        direction={"row"}
+        sx={{ justifyContent: "space-between", alignItems: "center" }}
+      >
         <Typography variant="h6">Inventory</Typography>
         <Button
           onClick={() => setShowCreate(true)}
-          startIcon={<AddIcon />} variant="contained">
+          startIcon={<AddIcon />}
+          variant="contained"
+        >
           New Item
         </Button>
       </Stack>
       <InventoryTable />
       <CreateInventoryDialog
         open={showCreate}
-        onClose={() => setShowCreate(false)} />
+        onClose={() => setShowCreate(false)}
+      />
     </Stack>
   )
 }

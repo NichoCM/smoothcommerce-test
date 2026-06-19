@@ -1,6 +1,6 @@
-import { configureStore } from '@reduxjs/toolkit'
-import inventoryReducer from './inventorySlice'
-import themeReducer from './themeSlice'
+import { configureStore } from "@reduxjs/toolkit"
+import inventoryReducer from "./inventorySlice"
+import themeReducer from "./themeSlice"
 
 export const store = configureStore({
   reducer: {

@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import type { InventoryItem } from '../types'
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import type { InventoryItem } from "../types"
 
 interface InventoryState {
   items: InventoryItem[]
@@ -10,7 +10,7 @@ const initialState: InventoryState = {
 }
 
 export const inventorySlice = createSlice({
-  name: 'inventory',
+  name: "inventory",
   initialState,
   reducers: {
     setItems(state, action: PayloadAction<InventoryItem[]>) {
