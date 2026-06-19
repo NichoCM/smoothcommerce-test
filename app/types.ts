@@ -8,5 +8,6 @@ export interface JsonPlaceholderTodo {
 
 // Desired inventory item structure for our application
 export interface InventoryItem {
+  id: number
   displayName: string
 }

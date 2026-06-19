@@ -1,8 +1,9 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useCallback, useMemo, useState } from "react"
 import { useSelector } from "react-redux"
 import type { RootState } from "../store/store"
+import type { InventoryItem } from "../types"
 import Table from "@mui/material/Table"
 import TableBody from "@mui/material/TableBody"
 import TableCell from "@mui/material/TableCell"
@@ -11,17 +12,40 @@ import TableHead from "@mui/material/TableHead"
 import TableRow from "@mui/material/TableRow"
 import TablePagination from "@mui/material/TablePagination"
 import Paper from "@mui/material/Paper"
+import { TableSortLabel } from "@mui/material"
+import { comparison } from "../utils"
 
 export default function InventoryTable() {
   const items = useSelector((state: RootState) => state.inventory.items)
+
+  // Pagination state
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
 
-  // Memoize the paginated items to avoid based on the current items, page and rows
-  // to avoid unecessary rerenders
+  // Sort state, default column to null
+  const [sortColumn, setSortColumn] = useState<keyof InventoryItem | null>(null)
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc")
+
+  const handleSort = useCallback((column: keyof InventoryItem) => {
+    if (sortColumn === column) {
+      setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"))
+    } else {
+      setSortColumn(column)
+      setSortDirection("asc")
+    }
+  }, [sortColumn])
+
+  // Sort the inventory items by the configuration
+  const sortedItems = useMemo(() => {
+    if (!sortColumn) return [...items]
+    return [...items].sort((a, b) => comparison(a[sortColumn], b[sortColumn]) * (sortDirection === 'asc' ? 1 : -1))
+  }, [items, sortDirection, sortColumn])
+
+  // Memoize the paginated items **after sorting** to avoid based on the current items
+  // page and rows to avoid unecessary rerenders
   const paginatedItems = useMemo(() => {
-    return items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-  }, [items, page, rowsPerPage])
+    return sortedItems.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+  }, [sortedItems, page, rowsPerPage])
 
   return (
     <>
@@ -29,7 +53,15 @@ export default function InventoryTable() {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Display Name</TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortColumn === "displayName"}
+                  direction={sortColumn === "displayName" ? sortDirection : "asc"}
+                  onClick={() => handleSort("displayName")}
+                >
+                  Display Name
+                </TableSortLabel>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
